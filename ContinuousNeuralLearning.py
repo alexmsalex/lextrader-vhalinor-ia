@@ -1510,4 +1510,160 @@ class ContinuousNeuralLearningApp:
         # Intervalo de atualização
         ttk.Label(general_frame, text="Intervalo de Atualização (ms):").grid(row=1, column=0, sticky='w', pady=5)
         self.update_interval_var = tk.IntVar(value=1000)
-        ttk.Spinbox(general
+        ttk.Spinbox(general_frame, textvariable=self.update_interval_var, from_=100, to=10000, width=20).grid(row=1, column=1, sticky='w', padx=5)
+        
+        # Botões de controle
+        control_frame = ttk.Frame(general_frame)
+        control_frame.grid(row=2, column=0, columnspan=3, pady=10)
+        
+        ttk.Button(control_frame, text="▶️ Iniciar", command=self.start_learning).pack(side='left', padx=5)
+        ttk.Button(control_frame, text="⏸️ Pausar", command=self.pause_learning).pack(side='left', padx=5)
+        ttk.Button(control_frame, text="⏹️ Parar", command=self.stop_learning).pack(side='left', padx=5)
+        ttk.Button(control_frame, text="💾 Salvar Config", command=self.save_config).pack(side='left', padx=5)
+        
+        # Status
+        status_frame = ttk.LabelFrame(scrollable_frame, text="📊 Status do Sistema")
+        status_frame.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
+        
+        self.status_text = scrolledtext.ScrolledText(status_frame, height=10, width=80)
+        self.status_text.pack(padx=5, pady=5)
+        
+        # Métricas
+        metrics_frame = ttk.LabelFrame(scrollable_frame, text="📈 Métricas de Aprendizado")
+        metrics_frame.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
+        
+        self.metrics_labels = {}
+        metrics = ['Iterações', 'Taxa de Aprendizado', 'Acurácia', 'Perda', 'Tempo Decorrido']
+        
+        for i, metric in enumerate(metrics):
+            ttk.Label(metrics_frame, text=f"{metric}:").grid(row=i, column=0, sticky='w', padx=5, pady=2)
+            label = ttk.Label(metrics_frame, text="0")
+            label.grid(row=i, column=1, sticky='w', padx=5, pady=2)
+            self.metrics_labels[metric] = label
+        
+        logger.info("✅ Interface gráfica criada com sucesso")
+    
+    def browse_neural_directory(self):
+        """Abre diálogo para selecionar diretório"""
+        directory = filedialog.askdirectory(title="Selecionar Diretório da Rede Neural")
+        if directory:
+            self.neural_dir_var.set(directory)
+    
+    def start_learning(self):
+        """Inicia o aprendizado contínuo"""
+        if not self.is_running:
+            self.is_running = True
+            self.is_paused = False
+            self.log_status("▶️ Aprendizado contínuo iniciado")
+            
+            # Inicia thread de aprendizado
+            learning_thread = threading.Thread(target=self._learning_loop, daemon=True)
+            learning_thread.start()
+    
+    def pause_learning(self):
+        """Pausa o aprendizado"""
+        if self.is_running:
+            self.is_paused = not self.is_paused
+            status = "⏸️ Pausado" if self.is_paused else "▶️ Retomado"
+            self.log_status(status)
+    
+    def stop_learning(self):
+        """Para o aprendizado"""
+        self.is_running = False
+        self.is_paused = False
+        self.log_status("⏹️ Aprendizado parado")
+    
+    def save_config(self):
+        """Salva configurações"""
+        config = {
+            'neural_dir': self.neural_dir_var.get(),
+            'update_interval': self.update_interval_var.get()
+        }
+        
+        try:
+            with open('continuous_learning_config.json', 'w') as f:
+                json.dump(config, f, indent=2)
+            self.log_status("💾 Configurações salvas com sucesso")
+        except Exception as e:
+            self.log_status(f"❌ Erro ao salvar configurações: {e}")
+    
+    def log_status(self, message: str):
+        """Adiciona mensagem ao log de status"""
+        timestamp = datetime.now().strftime("%H:%M:%S")
+        log_message = f"[{timestamp}] {message}\n"
+        
+        if hasattr(self, 'status_text'):
+            self.status_text.insert('end', log_message)
+            self.status_text.see('end')
+        
+        logger.info(message)
+    
+    def update_metrics(self):
+        """Atualiza métricas na interface"""
+        if hasattr(self, 'metrics_labels'):
+            self.metrics_labels['Iterações'].config(text=str(self.iteration_count))
+            self.metrics_labels['Taxa de Aprendizado'].config(text=f"{self.learning_rate:.6f}")
+            self.metrics_labels['Acurácia'].config(text=f"{self.accuracy:.2%}")
+            self.metrics_labels['Perda'].config(text=f"{self.loss:.4f}")
+            
+            elapsed = (datetime.now() - self.start_time).total_seconds()
+            hours = int(elapsed // 3600)
+            minutes = int((elapsed % 3600) // 60)
+            seconds = int(elapsed % 60)
+            self.metrics_labels['Tempo Decorrido'].config(text=f"{hours:02d}:{minutes:02d}:{seconds:02d}")
+    
+    def _learning_loop(self):
+        """Loop principal de aprendizado"""
+        self.start_time = datetime.now()
+        
+        while self.is_running:
+            if not self.is_paused:
+                try:
+                    # Simula iteração de aprendizado
+                    self.iteration_count += 1
+                    
+                    # Atualiza métricas simuladas
+                    self.accuracy = min(0.99, self.accuracy + random.uniform(0, 0.01))
+                    self.loss = max(0.01, self.loss - random.uniform(0, 0.01))
+                    
+                    # Atualiza interface
+                    if self.root:
+                        self.root.after(0, self.update_metrics)
+                        self.root.after(0, self.log_status, 
+                                      f"Iteração {self.iteration_count} - Acurácia: {self.accuracy:.2%}")
+                    
+                    # Aguarda intervalo
+                    time.sleep(self.update_interval_var.get() / 1000.0)
+                    
+                except Exception as e:
+                    logger.error(f"Erro no loop de aprendizado: {e}")
+                    self.log_status(f"❌ Erro: {e}")
+            else:
+                time.sleep(0.1)
+    
+    def run(self):
+        """Executa a interface gráfica"""
+        if self.root:
+            logger.info("🚀 Iniciando interface gráfica...")
+            self.root.mainloop()
+
+# Função principal
+def main():
+    """Função principal"""
+    print("=" * 80)
+    print("🧠 CONTINUOUS NEURAL LEARNING - LEXTRADER-IAG 4.0")
+    print("=" * 80)
+    
+    try:
+        # Cria e executa sistema
+        system = ContinuousNeuralLearning()
+        system.run()
+        
+    except KeyboardInterrupt:
+        print("\n⚠️  Sistema interrompido pelo usuário")
+    except Exception as e:
+        print(f"\n❌ Erro fatal: {e}")
+        logger.error(f"Erro fatal: {e}", exc_info=True)
+
+if __name__ == "__main__":
+    main()

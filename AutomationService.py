@@ -14,7 +14,7 @@ class TradingPlatform(str, Enum):
     BINANCE = "BINANCE"
     CTRADER = "CTRADER"
     OLYMPTRADE = "OLYMPTRADE"
-
+    PIONEX = "PIONEX"
 class TradeType(str, Enum):
     BUY = "BUY"
     SELL = "SELL"
@@ -135,10 +135,29 @@ class CTraderService:
         
         # Simulate price
         base_prices = {
+            # Forex Pairs
             "EURUSD": 1.08,
             "GBPUSD": 1.26,
             "USDJPY": 151.5,
-            "XAUUSD": 2150.0
+            "AUDUSD": 0.66,
+            "USDCAD": 1.35,
+            # Commodities
+            "XAUUSD": 2150.0,
+            "XAGUSD": 24.5,
+            "BRENT": 85.0,
+            # Cryptocurrencies
+            "BTCUSD": 50000.0,
+            "ETHUSD": 3500.0,
+            "LTCUSD": 85.0,
+            "XRPUSD": 0.65,
+            "ADAUSD": 0.55,
+            "SOLUSD": 150.0,
+            "DOTUSD": 8.5,
+            "LINKUSD": 18.0,
+            "MATICUSD": 0.85,
+            "AVAXUSD": 42.0,
+            "UNIUSD": 12.0,
+            "ATOMUSD": 11.5
         }
         base_price = base_prices.get(symbol, 1.0)
         price = base_price * (1 + (random.random() - 0.5) * 0.001)
@@ -294,9 +313,28 @@ class CTraderAdapter(PlatformAdapter):
     async def get_market_data(self, symbol: str) -> AutomationMarketData:
         """Obtém dados de mercado do cTrader"""
         base_prices = {
+            # Forex Pairs
             "EURUSD": 1.08,
             "GBPUSD": 1.26,
-            "USDJPY": 151.5
+            "USDJPY": 151.5,
+            "AUDUSD": 0.66,
+            "USDCAD": 1.35,
+            "NZDUSD": 0.61,
+            "EURGBP": 0.86,
+            # Commodities
+            "XAUUSD": 2150.0,
+            "XAGUSD": 24.5,
+            "BRENT": 85.0,
+            "WTI": 80.0,
+            # Cryptocurrencies
+            "BTCUSD": 50000.0,
+            "ETHUSD": 3500.0,
+            "LTCUSD": 85.0,
+            "XRPUSD": 0.65,
+            "ADAUSD": 0.55,
+            "SOLUSD": 150.0,
+            "DOTUSD": 8.5,
+            "LINKUSD": 18.0
         }
         base_price = base_prices.get(symbol, 1.08)
         spread = 0.0001
@@ -317,9 +355,28 @@ class CTraderAdapter(PlatformAdapter):
     async def get_current_price(self, symbol: str) -> float:
         """Obtém preço atual do cTrader"""
         base_prices = {
+            # Forex Pairs
             "EURUSD": 1.08,
             "GBPUSD": 1.26,
-            "USDJPY": 151.5
+            "USDJPY": 151.5,
+            "AUDUSD": 0.66,
+            "USDCAD": 1.35,
+            "NZDUSD": 0.61,
+            "EURGBP": 0.86,
+            # Commodities
+            "XAUUSD": 2150.0,
+            "XAGUSD": 24.5,
+            "BRENT": 85.0,
+            "WTI": 80.0,
+            # Cryptocurrencies
+            "BTCUSD": 50000.0,
+            "ETHUSD": 3500.0,
+            "LTCUSD": 85.0,
+            "XRPUSD": 0.65,
+            "ADAUSD": 0.55,
+            "SOLUSD": 150.0,
+            "DOTUSD": 8.5,
+            "LINKUSD": 18.0
         }
         base_price = base_prices.get(symbol, 1.08)
         return base_price + (random.random() - 0.5) * 0.001
@@ -669,32 +726,76 @@ class AISupervisor:
             platforms = [
                 TradingPlatform.BINANCE,
                 TradingPlatform.CTRADER,
-                TradingPlatform.OLYMPTRADE
+                TradingPlatform.OLYMPTRADE,
+                TradingPlatform.PIONEX
             ]
             
             platform = random.choice(platforms)
             
             # Define symbols based on platform
             if platform == TradingPlatform.BINANCE:
-                symbols = ["BTC/USDT", "ETH/USDT", "SOL/USDT"]
+                symbols = [
+                    "BTC/USDT", "ETH/USDT", "SOL/USDT", "ADA/USDT", "XRP/USDT",
+                    "DOT/USDT", "LINK/USDT", "MATIC/USDT", "AVAX/USDT", "UNI/USDT",
+                    "ATOM/USDT", "LTC/USDT", "BCH/USDT", "ALGO/USDT", "VET/USDT"
+                ]
             elif platform == TradingPlatform.CTRADER:
-                symbols = ["EURUSD", "GBPUSD", "USDJPY"]
-            else:  # OLYMPTRADE
-                symbols = ["BRENT", "GOLD", "SILVER"]
+                symbols = [
+                    "EURUSD", "GBPUSD", "USDJPY", "AUDUSD", "USDCAD",
+                    "NZDUSD", "EURGBP", "XAUUSD", "XAGUSD", "BTCUSD",
+                    "ETHUSD", "BRENT", "WTI"
+                ]
+            elif platform == TradingPlatform.OLYMPTRADE:
+                symbols = [
+                    "BRENT", "GOLD", "SILVER", "WTI", "COPPER",
+                    "EURUSD", "GBPUSD", "BTCUSD", "ETHUSD"
+                ]
+            else:  # PIONEX
+                symbols = [
+                    "BTC/USDT", "ETH/USDT", "BNB/USDT", "SOL/USDT", "ADA/USDT",
+                    "XRP/USDT", "DOT/USDT", "MATIC/USDT"
+                ]
             
             symbol = random.choice(symbols)
             
             # Define base price
             base_prices = {
-                "BTC/USDT": 65000,
-                "ETH/USDT": 3500,
-                "SOL/USDT": 150,
+                # Cryptocurrencies
+                "BTC/USDT": 65000.0,
+                "ETH/USDT": 3500.0,
+                "SOL/USDT": 150.0,
+                "ADA/USDT": 0.55,
+                "XRP/USDT": 0.65,
+                "DOT/USDT": 8.5,
+                "LINK/USDT": 18.0,
+                "MATIC/USDT": 0.85,
+                "AVAX/USDT": 42.0,
+                "UNI/USDT": 12.0,
+                "ATOM/USDT": 11.5,
+                "LTC/USDT": 85.0,
+                "BCH/USDT": 320.0,
+                "ALGO/USDT": 0.28,
+                "VET/USDT": 0.035,
+                "BNB/USDT": 580.0,
+                # Forex Pairs
                 "EURUSD": 1.08,
                 "GBPUSD": 1.26,
                 "USDJPY": 151.5,
+                "AUDUSD": 0.66,
+                "USDCAD": 1.35,
+                "NZDUSD": 0.61,
+                "EURGBP": 0.86,
+                # Commodities
                 "BRENT": 85.0,
                 "GOLD": 2150.0,
-                "SILVER": 24.5
+                "SILVER": 24.5,
+                "WTI": 80.0,
+                "COPPER": 4.2,
+                # Crypto USD pairs
+                "BTCUSD": 65000.0,
+                "ETHUSD": 3500.0,
+                "XAUUSD": 2150.0,
+                "XAGUSD": 24.5
             }
             
             base_price = base_prices.get(symbol, 100)
