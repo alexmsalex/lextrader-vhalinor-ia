@@ -1,0 +1,13 @@
+{
+  "timestamp": "2026-01-16T21:04:09.802624",
+  "exchanges": {
+    "cTrader-Demo": {
+      "type": "CTRADER",
+      "status": "configured"
+    },
+    "Pionex-Live": {
+      "type": "PIONEX",
+      "status": "configured"
+    }
+  }
+}

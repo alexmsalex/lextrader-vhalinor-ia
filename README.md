@@ -1,109 +1,111 @@
-# 🟣 Camada Quântica - Neural Layer 05
+# 🔴 Camada Sensorial - Neural Layer 01
 
 ## Descrição
-Esta camada é responsável pelo **processamento quântico**, **computação avançada** e **otimização de alta performance** do sistema.
+Esta camada é responsável pela **entrada de dados** e **percepção sensorial** do sistema LEXTRADER-IAG 4.0.
 
 ## Função Principal
-- **Computação quântica** simulada
-- **Otimização** de portfólios complexos
-- **Análise de correlações** multidimensionais
-- **Processamento paralelo** massivo
+- **Coleta de dados** de mercado em tempo real
+- **Análise de feeds** de preços e volumes
+- **Processamento de sinais** de entrada
+- **Detecção de padrões** iniciais
 
-## 📊 Estatísticas
-- **Total de Arquivos**: 40 arquivos Python
-- **Categorias**: 11 subcategorias funcionais
-- **Linhas de Código**: ~20.000+ linhas estimadas
+## Componentes Principais
 
-## 🗂️ Organização por Categoria
+### Análise de Mercado
+- `crypto_analysis_advanced.py` - Análise de criptomoedas
+- `forex_analysis_advanced.py` - Análise de forex
+- `arbitrage_analysis_advanced.py` - Análise de arbitragem
+- `unified_market_analyzer.py` - Análise unificada de mercados
 
-### 🧠 Núcleo Quântico (5 arquivos)
-- `QuantumCore.py` - Núcleo principal
-- `quantum_core.py` - Implementação alternativa
-- `quantum_bus.py` - Bus de comunicação
-- `quantumService.py` - Serviço principal
-- `quantum-config.py` - Configurações
+### Sistema de Dados de Criptomoedas ⭐
+- `crypto_data_collector.py` - Coletor de dados das top 20 criptos
+- `crypto_data_updater.py` - Atualizador automático de dados
+- `crypto_data_analyzer.py` - Analisador estatístico de dados
+- `crypto_data/` - Diretório com 19,602 registros históricos
 
-### 🔬 Processamento Neural (5 arquivos)
-- `QuantumNeuralProcessor.py` - Processador neural
-- `quantum_neural_network.py` - Rede neural quântica
-- `QuantumNeuralLibrary.py` - Biblioteca neural
-- `quantum_neural_library.py` - Implementação alternativa
-- `ContinuousQuantumLearning.py` - Aprendizado contínuo
+### Sistema de Dados de Forex ⭐ NOVO
+- `forex_data_collector.py` - Coletor de dados dos top 20 pares
+- `forex_data_analyzer.py` - Analisador estatístico de dados
+- `forex_data/` - Diretório com 21,900 registros históricos
 
-### 📈 Análise de Mercado (6 arquivos)
-- `QuantumAnalysis.py` - Análise principal
-- `quantum_analysis.py` - Script de análise
-- `QuantumAnalysisService.py` - Serviço de análise
-- `QuantumPriceAnalysis.py` - Análise de preços
-- `quantum_price_analysis.py` - Implementação alternativa
-- `QuantumMarketSimulator.py` - Simulador de mercado
+### APIs e Integrações
+- `binance_api.py` - Integração com Binance
+- `ctrader_api.py` - Integração com cTrader
+- `oracle_data.py` - Oráculo de dados
 
-### 🔄 Otimização (3 arquivos)
-- `QuantumOptimizationService.py` - Serviço de otimização
-- `quantum-optimization.py` - Algoritmos
-- `QuantumOptimizationDashboard.py` - Dashboard
+### Diagnósticos
+- `deep_diagnostics.py` - Diagnósticos profundos do sistema
 
-### 💱 Arbitragem (3 arquivos)
-- `QuantumArbitrageService.py` - Serviço
-- `quantum-arbitrage.py` - Algoritmos
-- `QuantumArbitrageDashboard.py` - Dashboard
+## 📊 Dados de Criptomoedas
 
-### 🤖 Trading (2 arquivos)
-- `quantum_algorithms_trader.py` - Trader quântico
-- `quantum-trader-integration.py` - Integração
+### Estatísticas
+- **20 criptomoedas** coletadas
+- **19,602 registros** históricos (3 anos)
+- **Retorno médio**: +201.31%
+- **Volatilidade média**: 4.24%
 
-### 🎛️ Simulação (4 arquivos)
-- `QuantumCircuitSimulator.py` - Simulador de circuitos
-- `QuantumCircuitVisualizer.py` - Visualizador
-- `QuantumSimulationTerminal.py` - Terminal
-- `simulador_quantum.py` - Simulador geral
+### Top 5 Criptomoedas por Retorno
+1. SOL (Solana) - +903.80%
+2. XRP (Ripple) - +588.84%
+3. BTC (Bitcoin) - +456.96%
+4. TRX (Tron) - +447.78%
+5. BCH (Bitcoin Cash) - +360.40%
 
-### 📊 Dashboards (5 arquivos)
-- `QuantumNetworkDashboard.py` - Dashboard de rede
-- `QuantumPanel.py` - Painel de controle
-- `QuantumTradersDashboard.py` - Dashboard de traders
-- `QuantumAnalysisVisualizer.py` - Visualizador
-- `QuantumOptimizationDashboard.py` - Dashboard de otimização
+### Uso
+```bash
+# Coletar dados
+python crypto_data_collector.py
 
-### 🧬 Bio-Quantum (3 arquivos)
-- `advanced_bio_quantum_system.py` - Sistema bio-quântico
-- `BioQuantumService.py` - Serviço
-- `BioQuantumTerminal.py` - Terminal
+# Atualizar dados
+python crypto_data_updater.py
 
-### 🔗 CRM & Leads (3 arquivos)
-- `QuantumCRM.py` - CRM quântico
-- `QuantumLeadService.py` - Serviço de leads
-- `LeadRelationshipManagementQuantum.py` - Gestão
+# Analisar dados
+python crypto_data_analyzer.py
+```
 
-### 🔄 Arquitetura (2 arquivos)
-- `QuantumTransformer.py` - Transformador
-- `QuantumEnhancedArchitecture.py` - Arquitetura melhorada
+## 💱 Dados de Forex
+
+### Estatísticas
+- **20 pares forex** coletados (7 Majors + 13 Cross)
+- **21,900 registros** históricos (3 anos)
+- **Retorno médio**: -1.97%
+- **Volatilidade média**: 0.687%
+
+### Top 5 Pares por Retorno
+1. EUR/AUD - +36.70% (+6,135 pips)
+2. GBP/AUD - +31.77% (+6,137 pips)
+3. USD/JPY - +26.79% (+398,596 pips)
+4. EUR/USD - +20.90% (+2,247 pips)
+5. CAD/JPY - +17.14% (+190,010 pips)
+
+### Uso
+```bash
+# Coletar dados
+python forex_data_collector.py
+
+# Analisar dados
+python forex_data_analyzer.py
+```
+
+## 📈 Resumo Total de Dados
+
+| Tipo | Ativos | Registros | Período | Retorno Médio |
+|------|--------|-----------|---------|---------------|
+| **Criptomoedas** | 20 | 19,602 | 3 anos | +201.31% |
+| **Forex** | 20 | 21,900 | 3 anos | -1.97% |
+| **TOTAL** | 40 | 41,502 | 3 anos | +99.67% |
 
 ## Cor de Identificação
-🟣 **Roxo** - Representa mistério, poder e tecnologia avançada
+🔴 **Vermelho** - Representa a entrada vital de dados no sistema
 
 ## Fluxo de Dados
 ```
-Dados Complexos → Processamento Quântico → Otimização → Resultados Avançados
+Mercado → APIs → Coleta → Validação → Armazenamento → Próxima Camada
 ```
 
-## Características
-- **Superposição** de estados de mercado
-- **Entrelaçamento** de variáveis correlacionadas
-- **Interferência** quântica para otimização
-- **Medição** de resultados probabilísticos
-
-## Aplicações Quânticas
-- **Otimização de Portfólio**: Seleção ótima de ativos
-- **Análise de Risco**: Modelagem de cenários complexos
-- **Arbitragem Quântica**: Detecção de oportunidades
-- **Previsão Avançada**: Modelos probabilísticos
-
-## Algoritmos Implementados
-- **Quantum Annealing** para otimização
-- **Grover's Algorithm** para busca
-- **Shor's Algorithm** para criptografia
-- **Variational Quantum Eigensolver** (VQE)
-
 ## Status
-✅ Estrutura criada e pronta para organização dos componentes quânticos
+✅ Estrutura completa e operacional
+✅ Sistema de dados de criptomoedas implementado
+✅ Sistema de dados de forex implementado
+✅ 41,502 registros históricos coletados
+✅ 40 ativos disponíveis para análise

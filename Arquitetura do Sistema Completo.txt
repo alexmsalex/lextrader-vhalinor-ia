@@ -1,0 +1,58 @@
+trading-automation/
+├── main.py                    # Ponto de entrada principal
+├── requirements.txt
+├── config/
+│   ├── settings.py           # Configurações do sistema
+│   ├── credentials.py        # Credenciais de APIs
+│   └── strategies.json       # Estratégias configuráveis
+├── core/
+│   ├── __init__.py
+│   ├── brain.py              # IA Geral - Cérebro do sistema
+│   ├── analyzer.py           # Analisador de mercado
+│   ├── decision_engine.py    # Motor de decisão
+│   ├── risk_manager.py       # Gerenciador de risco
+│   └── portfolio_manager.py  # Gerenciador de portfólio
+├── exchange/
+│   ├── __init__.py
+│   ├── base_exchange.py      # Interface base
+│   ├── binance_client.py     # Cliente Binance
+│   ├── binance_futures.py    # Binance Futures
+│   └── coinbase_client.py    # Coinbase
+├── execution/
+│   ├── __init__.py
+│   ├── order_executor.py     # Executor de ordens
+│   ├── order_manager.py      # Gerenciador de ordens
+│   └── position_tracker.py   # Rastreador de posições
+├── strategies/
+│   ├── __init__.py
+│   ├── base_strategy.py      # Estratégia base
+│   ├── trend_following.py    # Seguidor de tendência
+│   ├── mean_reversion.py     # Reversão à média
+│   ├── arbitrage.py          # Arbitragem
+│   └── neural_network.py     # Rede neural
+├── data/
+│   ├── __init__.py
+│   ├── market_data.py        # Coletor de dados
+│   ├── data_processor.py     # Processador de dados
+│   └── cache_manager.py      # Gerenciador de cache
+├── monitoring/
+│   ├── __init__.py
+│   ├── alert_system.py       # Sistema de alertas
+│   ├── performance_tracker.py # Rastreador de performance
+│   └── log_manager.py        # Gerenciador de logs
+├── ui/
+│   ├── __init__.py
+│   └── dashboard.py          # Dashboard Streamlit
+└── utils/
+    ├── __init__.py
+    ├── helpers.py            # Funções auxiliares
+    └── validators.py         # Validadores
+from src import get_config_value
+from src.logger import get_logger
+
+logger = get_logger(__name__)
+logger.info("Sistema iniciado", env="production", version="4.0")
+
+max_loss = get_config_value('trading.max_daily_loss')
+register_service('cache', CacheService())
+cache = get_service('cache')

@@ -1,0 +1,1 @@
+previsoes = qfa.quantum_time_series_prediction(serie_temporal, horizonte=10)
