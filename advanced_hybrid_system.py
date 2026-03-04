@@ -4,59 +4,19 @@ Sistema Integrado Quântico-Clássico Avançado
 Sistema híbrido com auto-evolução, hardware evolutivo, criptografia quântica
 e integração com metaverso para processamento de próxima geração.
 
-Autor: LEXTRADER-IAG 4.0 - Sistema Quântico Avançado
+Autor: Sistema Quântico Avançado
 Versão: 3.1.0
 Data: 2024
 """
 
-# Importações opcionais de módulos quânticos
-try:
-    from QuantumAnalysisVisualizer import QuantumProcessor, QuantumCircuit, QuantumState, EntanglementManager
-except ImportError:
-    print("⚠️  Módulos quantum não disponíveis")
-    QuantumProcessor = QuantumCircuit = QuantumState = EntanglementManager = None
-
-try:
-    from classical import ClassicalProcessor, GPUMultiprocessor, TensorProcessor
-except ImportError:
-    print("⚠️  Módulos classical não disponíveis")
-    ClassicalProcessor = GPUMultiprocessor = TensorProcessor = None
-
-try:
-    from evolutionary_hw import HardwareEvolver, GeneticOptimizer, MorphologyEngine
-except ImportError:
-    print("⚠️  Módulos evolutionary_hw não disponíveis")
-    HardwareEvolver = GeneticOptimizer = MorphologyEngine = None
-
-try:
-    from self_evolution import SystemEvolver, ArchitectureOptimizer, CodeMutator
-except ImportError:
-    print("⚠️  Módulos self_evolution não disponíveis")
-    SystemEvolver = ArchitectureOptimizer = CodeMutator = None
-
-try:
-    from quantum_crypto import QuantumCrypto, QuantumKeyDistribution, EntanglementSource
-except ImportError:
-    print("⚠️  Módulos quantum_crypto não disponíveis")
-    QuantumCrypto = QuantumKeyDistribution = EntanglementSource = None
-
-try:
-    from metaverse import MetaverseConnector, VirtualEntity, DigitalTwin
-except ImportError:
-    print("⚠️  Módulos metaverse não disponíveis")
-    MetaverseConnector = VirtualEntity = DigitalTwin = None
-
-try:
-    from holo import HolographicInterface, SpatialProjector
-except ImportError:
-    print("⚠️  Módulos holo não disponíveis")
-    HolographicInterface = SpatialProjector = None
-
-try:
-    from neuromorphic import NeuromorphicProcessor, SynapticEngine
-except ImportError:
-    print("⚠️  Módulos neuromorphic não disponíveis")
-    NeuromorphicProcessor = SynapticEngine = None
+from quantum import QuantumProcessor, QuantumCircuit, QuantumState, EntanglementManager
+from classical import ClassicalProcessor, GPUMultiprocessor, TensorProcessor
+from evolutionary_hw import HardwareEvolver, GeneticOptimizer, MorphologyEngine
+from self_evolution import SystemEvolver, ArchitectureOptimizer, CodeMutator
+from quantum_crypto import QuantumCrypto, QuantumKeyDistribution, EntanglementSource
+from metaverse import MetaverseConnector, VirtualEntity, DigitalTwin
+from holo import HolographicInterface, SpatialProjector
+from neuromorphic import NeuromorphicProcessor, SynapticEngine
 
 import asyncio
 import concurrent.futures

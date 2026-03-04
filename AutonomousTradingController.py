@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import ttk, messagebox
 from dataclasses import dataclass
-from typing import List, Dict, Optional, Literal, Callable, Any
-from datetime import datetime, time
+from typing import List, Optional
+from datetime import datetime
 import threading
 import time as time_module
 import random
@@ -58,7 +58,7 @@ class TradingSession:
 class Position:
     position_id: str
     symbol: str
-    type: str
+    order_type: str  # Renomeado de 'type' para evitar conflito
     volume: float
     open_price: float
     profit: float
@@ -110,7 +110,7 @@ class MockWillTrader:
             new_position = Position(
                 position_id=f"pos_{int(time_module.time())}",
                 symbol=params.symbol,
-                type=params.type.value,
+                order_type=params.type.value,
                 volume=params.volume,
                 open_price=params.price,
                 profit=0.0
@@ -201,6 +201,7 @@ class AutonomousTradingControllerApp:
         self.last_action_label = None
         self.next_analysis_label = None
         self.connection_badge = None
+        self.notebook = None  # Inicializado aqui
         
         # Thread de análise
         self.analysis_thread = None
@@ -242,11 +243,11 @@ class AutonomousTradingControllerApp:
                        relief='solid',
                        borderwidth=1)
     
-    def show_toast(self, message: str, type: str = "info") -> None:
+    def show_toast(self, message: str, msg_type: str = "info") -> None:
         """Mostrar notificação toast (equivalente ao toast)"""
-        if type == "error":
+        if msg_type == "error":
             messagebox.showerror("Sistema Autônomo", message)
-        elif type == "success":
+        elif msg_type == "success":
             messagebox.showinfo("Sucesso", message)
         else:
             messagebox.showinfo("Sistema Autônomo", message)
@@ -268,7 +269,7 @@ class AutonomousTradingControllerApp:
             Position(
                 position_id="pos_1",
                 symbol="EURUSD",
-                type="BUY",
+                order_type="BUY",
                 volume=0.1,
                 open_price=1.2000,
                 profit=15.50
@@ -276,7 +277,7 @@ class AutonomousTradingControllerApp:
             Position(
                 position_id="pos_2",
                 symbol="BTCUSD",
-                type="SELL",
+                order_type="SELL",
                 volume=0.01,
                 open_price=45000.0,
                 profit=-8.20
@@ -310,7 +311,7 @@ class AutonomousTradingControllerApp:
                 return
             
             # 3. Obter preços atualizados
-            market_prices = await self.will_trader.get_market_prices(self.config.allowed_symbols)
+            _ = await self.will_trader.get_market_prices(self.config.allowed_symbols)
             self.last_action = 'Preços de mercado atualizados'
             self.root.after(0, self.update_displays)
             
@@ -469,9 +470,11 @@ class AutonomousTradingControllerApp:
         self.stop_analysis = True
         
         # Fechar todas as posições
-        for position in self.will_trader.positions[:]:
-            threading.Thread(target=lambda: asyncio.run(
-                self.will_trader.close_position(position.position_id)
+        positions_to_close = self.will_trader.positions[:]
+        for pos in positions_to_close:
+            pos_id = pos.position_id
+            threading.Thread(target=lambda pid=pos_id: asyncio.run(
+                self.will_trader.close_position(pid)
             ), daemon=True).start()
         
         self.update_displays()
@@ -727,14 +730,123 @@ class AutonomousTradingControllerApp:
         parent.rowconfigure(0, weight=1)
     
     def setup_session_tab(self, parent: ttk.Frame) -> None:
-        """Configurar aba de sessão (equivalente ao TabsContent session)"""
-        # ...existing code... (implementação similar às outras abas)
-        pass
+        """Configurar aba de sessão"""
+        session_container = ttk.Frame(parent, padding="20")
+        session_container.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Informações da sessão
+        session_card = ttk.LabelFrame(session_container, text="📊 Sessão Atual", padding="20")
+        session_card.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 20))
+        
+        # ID da sessão
+        id_frame = ttk.Frame(session_card)
+        id_frame.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=5)
+        ttk.Label(id_frame, text="ID da Sessão:", style='Muted.TLabel').grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(id_frame, text=self.session.id, font=("Courier", 10, "bold")).grid(row=0, column=1, sticky=tk.E)
+        id_frame.columnconfigure(0, weight=1)
+        
+        # Hora de início
+        start_frame = ttk.Frame(session_card)
+        start_frame.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=5)
+        ttk.Label(start_frame, text="Início:", style='Muted.TLabel').grid(row=0, column=0, sticky=tk.W)
+        ttk.Label(start_frame, text=self.session.start_time.strftime("%d/%m/%Y %H:%M:%S"), 
+                 font=("Arial", 10, "bold")).grid(row=0, column=1, sticky=tk.E)
+        start_frame.columnconfigure(0, weight=1)
+        
+        # Estatísticas da sessão
+        stats_card = ttk.LabelFrame(session_container, text="📈 Estatísticas", padding="20")
+        stats_card.grid(row=1, column=0, sticky=(tk.W, tk.E))
+        
+        stats_data = [
+            ("Total de Trades", str(self.session.total_trades)),
+            ("Trades Bem-Sucedidos", str(self.session.successful_trades)),
+            ("Lucro da Sessão", f"R$ {self.session.profit:.2f}"),
+            ("Max Drawdown", f"{self.session.max_drawdown:.2f}%"),
+            ("Trades Ativos", str(self.session.active_trades)),
+            ("Taxa de Sucesso", f"{(self.session.successful_trades / max(self.session.total_trades, 1) * 100):.1f}%")
+        ]
+        
+        for i, (label, value) in enumerate(stats_data):
+            stat_frame = ttk.Frame(stats_card)
+            stat_frame.grid(row=i//2, column=i%2, padx=20, pady=10, sticky=tk.W)
+            
+            ttk.Label(stat_frame, text=label, style='Muted.TLabel', 
+                     font=("Arial", 9)).grid(row=0, column=0, sticky=tk.W)
+            ttk.Label(stat_frame, text=value, 
+                     font=("Arial", 12, "bold")).grid(row=1, column=0, sticky=tk.W)
+        
+        session_container.columnconfigure(0, weight=1)
+        parent.columnconfigure(0, weight=1)
+        parent.rowconfigure(0, weight=1)
     
     def setup_config_tab(self, parent: ttk.Frame) -> None:
-        """Configurar aba de configurações (equivalente ao TabsContent config)"""
-        # ...existing code... (implementação similar às outras abas)
-        pass
+        """Configurar aba de configurações"""
+        config_container = ttk.Frame(parent, padding="20")
+        config_container.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        # Configurações de Trading
+        trading_card = ttk.LabelFrame(config_container, text="⚙️ Configurações de Trading", padding="20")
+        trading_card.grid(row=0, column=0, sticky=(tk.W, tk.E), pady=(0, 20))
+        
+        # Max Concurrent Trades
+        ttk.Label(trading_card, text="Trades Simultâneos Máximos:", 
+                 font=("Arial", 10)).grid(row=0, column=0, sticky=tk.W, pady=5)
+        concurrent_scale = ttk.Scale(trading_card, from_=1, to=10, orient=tk.HORIZONTAL, length=300)
+        concurrent_scale.set(self.config.max_concurrent_trades)
+        concurrent_scale.grid(row=0, column=1, padx=10)
+        ttk.Label(trading_card, text=str(self.config.max_concurrent_trades), 
+                 font=("Arial", 10, "bold")).grid(row=0, column=2)
+        
+        # Max Risk per Trade
+        ttk.Label(trading_card, text="Risco Máximo por Trade:", 
+                 font=("Arial", 10)).grid(row=1, column=0, sticky=tk.W, pady=5)
+        risk_scale = ttk.Scale(trading_card, from_=0.5, to=5.0, orient=tk.HORIZONTAL, length=300)
+        risk_scale.set(self.config.max_risk_per_trade)
+        risk_scale.grid(row=1, column=1, padx=10)
+        ttk.Label(trading_card, text=f"{self.config.max_risk_per_trade:.1f}%", 
+                 font=("Arial", 10, "bold")).grid(row=1, column=2)
+        
+        # Min Confidence Level
+        ttk.Label(trading_card, text="Confiança Mínima:", 
+                 font=("Arial", 10)).grid(row=2, column=0, sticky=tk.W, pady=5)
+        confidence_scale = ttk.Scale(trading_card, from_=50, to=100, orient=tk.HORIZONTAL, length=300)
+        confidence_scale.set(self.config.min_confidence_level)
+        confidence_scale.grid(row=2, column=1, padx=10)
+        ttk.Label(trading_card, text=f"{self.config.min_confidence_level:.0f}%", 
+                 font=("Arial", 10, "bold")).grid(row=2, column=2)
+        
+        # Checkboxes
+        ttk.Checkbutton(trading_card, text="Stop Loss Automático", 
+                       variable=tk.BooleanVar(value=self.config.auto_stop_loss)).grid(
+                           row=3, column=0, columnspan=2, sticky=tk.W, pady=5)
+        
+        ttk.Checkbutton(trading_card, text="Take Profit Automático", 
+                       variable=tk.BooleanVar(value=self.config.auto_take_profit)).grid(
+                           row=4, column=0, columnspan=2, sticky=tk.W, pady=5)
+        
+        # Horário de Trading
+        hours_card = ttk.LabelFrame(config_container, text="🕐 Horário de Trading", padding="20")
+        hours_card.grid(row=1, column=0, sticky=(tk.W, tk.E), pady=(0, 20))
+        
+        ttk.Label(hours_card, text="Início:", font=("Arial", 10)).grid(row=0, column=0, sticky=tk.W, pady=5)
+        ttk.Label(hours_card, text=self.config.trading_hours.start, 
+                 font=("Arial", 10, "bold")).grid(row=0, column=1, sticky=tk.W, padx=10)
+        
+        ttk.Label(hours_card, text="Fim:", font=("Arial", 10)).grid(row=1, column=0, sticky=tk.W, pady=5)
+        ttk.Label(hours_card, text=self.config.trading_hours.end, 
+                 font=("Arial", 10, "bold")).grid(row=1, column=1, sticky=tk.W, padx=10)
+        
+        # Símbolos Permitidos
+        symbols_card = ttk.LabelFrame(config_container, text="📊 Símbolos Permitidos", padding="20")
+        symbols_card.grid(row=2, column=0, sticky=(tk.W, tk.E))
+        
+        symbols_text = ", ".join(self.config.allowed_symbols)
+        ttk.Label(symbols_card, text=symbols_text, 
+                 font=("Arial", 10), wraplength=600).grid(row=0, column=0, sticky=tk.W)
+        
+        config_container.columnconfigure(0, weight=1)
+        parent.columnconfigure(0, weight=1)
+        parent.rowconfigure(0, weight=1)
     
     def setup_monitoring_tab(self, parent: ttk.Frame) -> None:
         """Configurar aba de monitoramento (equivalente ao TabsContent monitoring)"""
@@ -768,7 +880,7 @@ class AutonomousTradingControllerApp:
             
             # Tipo e volume
             type_label = ttk.Label(left_frame, 
-                                  text=f"{position.type} {position.volume}",
+                                  text=f"{position.order_type} {position.volume}",
                                   font=("Arial", 10))
             type_label.grid(row=0, column=1)
             
@@ -857,9 +969,9 @@ class AutonomousTradingControllerApp:
 
 
 def main() -> None:
-    """Função principal para executar a aplicação (equivalente ao export do React)"""
+    """Função principal para executar a aplicação"""
     root = tk.Tk()
-    app = AutonomousTradingControllerApp(root)
+    _ = AutonomousTradingControllerApp(root)  # App é mantido vivo pelo root
     
     # Tornar a janela responsiva
     root.minsize(1400, 900)
