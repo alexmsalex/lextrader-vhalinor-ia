@@ -1,0 +1,30 @@
+// config/settings.json
+{
+    "ai": {
+        "model_path": "models/",
+        "confidence_threshold": 0.75,
+        "learning_rate": 0.001
+    },
+    "trading": {
+        "symbols": [
+            "BTC/USDT",
+            "ETH/USDT",
+            "BNB/USDT"
+        ],
+        "market_type": "spot",
+        "initial_capital": 10000,
+        "analysis_interval": 60
+    },
+    "exchange": {
+        "name": "binance",
+        "api_key": "SUA_API_KEY",
+        "api_secret": "SUA_API_SECRET",
+        "testnet": true
+    },
+    "risk": {
+        "risk_per_trade": 0.02,
+        "max_drawdown": 0.10,
+        "stop_loss_default": 0.02,
+        "take_profit_default": 0.04
+    }
+}

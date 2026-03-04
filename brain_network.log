@@ -1,0 +1,37 @@
+14:59:44.483 - ERROR - Erro fatal: [WinError 123] A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta: '& c:'
+Traceback (most recent call last):
+  File "c:\Users\ALEXMS-PC\Desktop\LEXTRADER-IAG-3.0-JAVA-main\Inteligencia_artificial_central.py", line 1149, in <module>
+    asyncio.run(main())
+    ~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "c:\Users\ALEXMS-PC\Desktop\LEXTRADER-IAG-3.0-JAVA-main\Inteligencia_artificial_central.py", line 1092, in main
+    os.makedirs(iag_path, exist_ok=True)
+    ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen os>", line 226, in makedirs
+  File "<frozen os>", line 226, in makedirs
+  File "<frozen os>", line 226, in makedirs
+  [Previous line repeated 9 more times]
+  File "<frozen os>", line 236, in makedirs
+OSError: [WinError 123] A sintaxe do nome do arquivo, do nome do diretório ou do rótulo do volume está incorreta: '& c:'
+16:10:16.370 - ERROR - Erro fatal: 
+Traceback (most recent call last):
+  File "c:\Users\ALEXMS-PC\Desktop\LEXTRADER-IAG-3.0-JAVA-main\Inteligencia_artificial_central.py", line 1149, in <module>
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 204, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\runners.py", line 127, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "C:\Users\ALEXMS-PC\AppData\Local\Programs\Python\Python314\Lib\asyncio\base_events.py", line 719, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "c:\Users\ALEXMS-PC\Desktop\LEXTRADER-IAG-3.0-JAVA-main\Inteligencia_artificial_central.py", line 1088, in main
+EOFError
